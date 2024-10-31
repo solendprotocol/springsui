@@ -272,7 +272,8 @@ async function eject(options: any) {
   if (!weightHookAdminCapId) return;
 
   const tx = new Transaction();
-  lstClient.eject(tx, weightHookAdminCapId);
+  const adminCap = lstClient.eject(tx, weightHookAdminCapId);
+  tx.transferObjects([adminCap], keypair.toSuiAddress());
 
   const txResponse = await client.signAndExecuteTransaction({
     transaction: tx,

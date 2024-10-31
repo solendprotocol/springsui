@@ -272,10 +272,16 @@ export class LstClient {
   }
 
   eject(tx: Transaction, weightHookAdminCap: TransactionObjectInput) {
-    weightHookGenerated.eject(tx, this.liquidStakingObject.type, {
-      self: this.liquidStakingObject.weightHookId,
-      adminCap: weightHookAdminCap,
-    });
+    const [adminCap] = weightHookGenerated.eject(
+      tx,
+      this.liquidStakingObject.type,
+      {
+        self: this.liquidStakingObject.weightHookId,
+        adminCap: weightHookAdminCap,
+      },
+    );
+
+    return adminCap;
   }
 }
 
