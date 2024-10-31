@@ -18,6 +18,7 @@ import { WeightHook } from "./_generated/liquid_staking/weight/structs";
 export interface LiquidStakingObjectInfo {
   id: string;
   type: string;
+  weightHookId: string;
 }
 
 const SUI_SYSTEM_STATE_ID =
@@ -267,6 +268,13 @@ export class LstClient {
       self: weightHookId,
       systemState: SUI_SYSTEM_STATE_ID,
       liquidStakingInfo: this.liquidStakingObject.id,
+    });
+  }
+
+  eject(tx: Transaction, weightHookAdminCap: TransactionObjectInput) {
+    weightHookGenerated.eject(tx, this.liquidStakingObject.type, {
+      self: this.liquidStakingObject.weightHookId,
+      adminCap: weightHookAdminCap,
     });
   }
 }

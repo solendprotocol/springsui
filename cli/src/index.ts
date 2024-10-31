@@ -263,6 +263,30 @@ async function rebalance(options: any) {
   console.log(txResponse);
 }
 
+async function eject(options: any) {
+  const client = new SuiClient({ url: RPC_URL });
+  const lstClient = await LstClient.initialize(client, LIQUID_STAKING_INFO);
+  const weightHookAdminCapId = await lstClient.getWeightHookAdminCapId(
+    keypair.toSuiAddress(),
+  );
+  if (!weightHookAdminCapId) return;
+
+  const tx = new Transaction();
+  lstClient.eject(tx, weightHookAdminCapId);
+
+  const txResponse = await client.signAndExecuteTransaction({
+    transaction: tx,
+    signer: keypair,
+    options: {
+      showEvents: true,
+      showEffects: true,
+      showObjectChanges: true,
+    },
+  });
+
+  console.log(txResponse);
+}
+
 program.version("1.0.0").description("Spring Sui CLI");
 
 program
@@ -340,5 +364,7 @@ program
   .command("rebalance")
   .description("rebalance the validator set")
   .action(rebalance);
+
+program.command("eject").description("eject the weight hook").action(eject);
 
 program.parse(process.argv);
